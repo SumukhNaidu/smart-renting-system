@@ -1,0 +1,12 @@
+{
+  "name": "caterpillar-rental-data",
+  "version": "1.0.0",
+  "description": "Database initialization and sample dataset for Caterpillar Hackathon Smart Rental Tracking",
+  "main": "init_db.js",
+  "scripts": {
+    "init-db": "node init_db.js"
+  },
+  "dependencies": {
+    "sql.js": "^1.12.0"
+  }
+}

@@ -1,0 +1,607 @@
+{
+  "meta": {
+    "system_name": "CAT® Smart Rental Tracking System",
+    "module": "Data & Check-In/Check-Out",
+    "dataset_version": "1.0.0",
+    "generated_at": "2026-09-01T13:10:00Z",
+    "format_notes": "Combined relational & nested JSON dataset ready for offline import into Dashboard, Anomaly Detection, and Forecasting modules."
+  },
+  "summary": {
+    "total_equipment": 18,
+    "available_count": 5,
+    "checked_out_count": 9,
+    "idle_count": 1,
+    "overdue_count": 1,
+    "maintenance_count": 2,
+    "total_sites": 5,
+    "total_operators": 7,
+    "intentional_anomalies": 3
+  },
+  "equipment": [
+    {
+      "equipment_id": "EQX1001",
+      "type": "Excavator",
+      "model": "Cat 336 Heavy Hydraulic",
+      "status": "Checked Out",
+      "current_site_id": "S003",
+      "rental_rate_per_day": 450.0,
+      "created_at": "2025-01-15T08:00:00Z",
+      "current_site": {
+        "site_id": "S003",
+        "site_name": "Riverfront Commercial Hub",
+        "location": "St. Louis, MO",
+        "site_manager": "Robert Vance"
+      },
+      "current_operator": {
+        "operator_id": "OP101",
+        "operator_name": "Marcus Vance",
+        "contact_number": "+1-555-0143",
+        "certified": true
+      },
+      "rental_history": [
+        {
+          "log_id": 1,
+          "equipment_id": "EQX1001",
+          "site_id": "S003",
+          "operator_id": "OP101",
+          "check_out_date": "2025-04-01",
+          "expected_return_date": "2025-04-16",
+          "check_in_date": null,
+          "condition_notes": null,
+          "status": "Active"
+        }
+      ],
+      "usage_history": [
+        {
+          "usage_id": 1,
+          "equipment_id": "EQX1001",
+          "log_date": "2025-04-15",
+          "engine_hours": 10.0,
+          "idle_hours": 15.0,
+          "fuel_used": 145.5,
+          "location": "St. Louis, MO - S003"
+        }
+      ]
+    },
+    {
+      "equipment_id": "EQX1002",
+      "type": "Excavator",
+      "model": "Cat 320 Medium Hydraulic",
+      "status": "Available",
+      "current_site_id": null,
+      "rental_rate_per_day": 380.0,
+      "created_at": "2025-01-18T09:30:00Z",
+      "current_site": null,
+      "current_operator": null,
+      "rental_history": [],
+      "usage_history": []
+    },
+    {
+      "equipment_id": "EQC1001",
+      "type": "Crane",
+      "model": "Cat TL1255 Telehandler",
+      "status": "Checked Out",
+      "current_site_id": "S001",
+      "rental_rate_per_day": 600.0,
+      "created_at": "2025-02-01T10:00:00Z",
+      "current_site": {
+        "site_id": "S001",
+        "site_name": "Apex Mining Pit Alpha",
+        "location": "Peoria, IL",
+        "site_manager": "John Miller"
+      },
+      "current_operator": {
+        "operator_id": "OP102",
+        "operator_name": "Alicia Thorne",
+        "contact_number": "+1-555-0188",
+        "certified": true
+      },
+      "rental_history": [
+        {
+          "log_id": 2,
+          "equipment_id": "EQC1001",
+          "site_id": "S001",
+          "operator_id": "OP102",
+          "check_out_date": "2025-04-02",
+          "expected_return_date": "2025-04-20",
+          "check_in_date": null,
+          "condition_notes": null,
+          "status": "Active"
+        }
+      ],
+      "usage_history": [
+        {
+          "usage_id": 2,
+          "equipment_id": "EQC1001",
+          "log_date": "2025-04-15",
+          "engine_hours": 32.5,
+          "idle_hours": 4.0,
+          "fuel_used": 280.0,
+          "location": "Peoria, IL - S001"
+        }
+      ]
+    },
+    {
+      "equipment_id": "EQB1001",
+      "type": "Bulldozer",
+      "model": "Cat D6 Crawler Dozer",
+      "status": "Checked Out",
+      "current_site_id": "S002",
+      "rental_rate_per_day": 520.0,
+      "created_at": "2025-02-05T11:15:00Z",
+      "current_site": {
+        "site_id": "S002",
+        "site_name": "Metro Highway Expansion",
+        "location": "Chicago, IL",
+        "site_manager": "Sarah Jenkins"
+      },
+      "current_operator": {
+        "operator_id": "OP103",
+        "operator_name": "Brandon Lee",
+        "contact_number": "+1-555-0192",
+        "certified": true
+      },
+      "rental_history": [
+        {
+          "log_id": 3,
+          "equipment_id": "EQB1001",
+          "site_id": "S002",
+          "operator_id": "OP103",
+          "check_out_date": "2025-03-15",
+          "expected_return_date": "2025-03-30",
+          "check_in_date": "2025-03-29",
+          "condition_notes": "Returned clean, minor tracks wear",
+          "status": "Returned"
+        }
+      ],
+      "usage_history": [
+        {
+          "usage_id": 3,
+          "equipment_id": "EQB1001",
+          "log_date": "2025-03-28",
+          "engine_hours": 64.0,
+          "idle_hours": 12.0,
+          "fuel_used": 520.0,
+          "location": "Chicago, IL - S002"
+        }
+      ]
+    },
+    {
+      "equipment_id": "EQG1001",
+      "type": "Grader",
+      "model": "Cat 14M Motor Grader",
+      "status": "Available",
+      "current_site_id": null,
+      "rental_rate_per_day": 410.0,
+      "created_at": "2025-02-10T14:20:00Z",
+      "current_site": null,
+      "current_operator": null,
+      "rental_history": [],
+      "usage_history": []
+    },
+    {
+      "equipment_id": "EQW1001",
+      "type": "Wheel Loader",
+      "model": "Cat 950M Wheel Loader",
+      "status": "Checked Out",
+      "current_site_id": "S004",
+      "rental_rate_per_day": 490.0,
+      "created_at": "2025-02-12T08:45:00Z",
+      "current_site": {
+        "site_id": "S004",
+        "site_name": "Granite Quarry Extension",
+        "location": "Springfield, IL",
+        "site_manager": "Elena Rostova"
+      },
+      "current_operator": {
+        "operator_id": "OP104",
+        "operator_name": "Diana Ross",
+        "contact_number": "+1-555-0129",
+        "certified": true
+      },
+      "rental_history": [
+        {
+          "log_id": 4,
+          "equipment_id": "EQW1001",
+          "site_id": "S004",
+          "operator_id": "OP104",
+          "check_out_date": "2025-04-05",
+          "expected_return_date": "2025-04-25",
+          "check_in_date": null,
+          "condition_notes": null,
+          "status": "Active"
+        }
+      ],
+      "usage_history": [
+        {
+          "usage_id": 7,
+          "equipment_id": "EQW1001",
+          "log_date": "2025-04-14",
+          "engine_hours": 44.0,
+          "idle_hours": 8.5,
+          "fuel_used": 310.0,
+          "location": "Springfield, IL - S004"
+        }
+      ]
+    },
+    {
+      "equipment_id": "EQX1003",
+      "type": "Excavator",
+      "model": "Cat 349 Next Gen Excavator",
+      "status": "Maintenance",
+      "current_site_id": null,
+      "rental_rate_per_day": 550.0,
+      "created_at": "2025-02-15T16:00:00Z",
+      "current_site": null,
+      "current_operator": null,
+      "rental_history": [],
+      "usage_history": []
+    },
+    {
+      "equipment_id": "EQB1002",
+      "type": "Bulldozer",
+      "model": "Cat D8T Large Dozer",
+      "status": "Available",
+      "current_site_id": null,
+      "rental_rate_per_day": 650.0,
+      "created_at": "2025-02-20T07:30:00Z",
+      "current_site": null,
+      "current_operator": null,
+      "rental_history": [],
+      "usage_history": []
+    },
+    {
+      "equipment_id": "EQC1002",
+      "type": "Crane",
+      "model": "Cat 300T All-Terrain Crane",
+      "status": "Checked Out",
+      "current_site_id": "S005",
+      "rental_rate_per_day": 850.0,
+      "created_at": "2025-02-22T12:10:00Z",
+      "current_site": {
+        "site_id": "S005",
+        "site_name": "Logistics Park Construction",
+        "location": "Indianapolis, IN",
+        "site_manager": "David Chen"
+      },
+      "current_operator": {
+        "operator_id": "OP105",
+        "operator_name": "Carlos Gomez",
+        "contact_number": "+1-555-0177",
+        "certified": true
+      },
+      "rental_history": [
+        {
+          "log_id": 5,
+          "equipment_id": "EQC1002",
+          "site_id": "S005",
+          "operator_id": "OP105",
+          "check_out_date": "2025-04-10",
+          "expected_return_date": "2025-05-01",
+          "check_in_date": null,
+          "condition_notes": null,
+          "status": "Active"
+        }
+      ],
+      "usage_history": []
+    },
+    {
+      "equipment_id": "EQG1002",
+      "type": "Grader",
+      "model": "Cat 16M Motor Grader",
+      "status": "Checked Out",
+      "current_site_id": "S002",
+      "rental_rate_per_day": 430.0,
+      "created_at": "2025-02-25T09:00:00Z",
+      "current_site": {
+        "site_id": "S002",
+        "site_name": "Metro Highway Expansion",
+        "location": "Chicago, IL",
+        "site_manager": "Sarah Jenkins"
+      },
+      "current_operator": {
+        "operator_id": "OP107",
+        "operator_name": "Derek Shepherd",
+        "contact_number": "+1-555-0164",
+        "certified": true
+      },
+      "rental_history": [
+        {
+          "log_id": 6,
+          "equipment_id": "EQG1002",
+          "site_id": "S002",
+          "operator_id": "OP107",
+          "check_out_date": "2025-04-08",
+          "expected_return_date": "2025-04-22",
+          "check_in_date": null,
+          "condition_notes": null,
+          "status": "Active"
+        }
+      ],
+      "usage_history": []
+    },
+    {
+      "equipment_id": "EQW1002",
+      "type": "Wheel Loader",
+      "model": "Cat 980M Wheel Loader",
+      "status": "Idle",
+      "current_site_id": "S001",
+      "rental_rate_per_day": 510.0,
+      "created_at": "2025-03-01T10:30:00Z",
+      "current_site": {
+        "site_id": "S001",
+        "site_name": "Apex Mining Pit Alpha",
+        "location": "Peoria, IL",
+        "site_manager": "John Miller"
+      },
+      "current_operator": null,
+      "rental_history": [],
+      "usage_history": []
+    },
+    {
+      "equipment_id": "EQX1004",
+      "type": "Excavator",
+      "model": "Cat 308 Mini Excavator",
+      "status": "Available",
+      "current_site_id": null,
+      "rental_rate_per_day": 280.0,
+      "created_at": "2025-03-05T13:45:00Z",
+      "current_site": null,
+      "current_operator": null,
+      "rental_history": [],
+      "usage_history": []
+    },
+    {
+      "equipment_id": "EQB1003",
+      "type": "Bulldozer",
+      "model": "Cat D6 XE Electric Drive Dozer",
+      "status": "Checked Out",
+      "current_site_id": "S003",
+      "rental_rate_per_day": 580.0,
+      "created_at": "2025-03-10T11:00:00Z",
+      "current_site": {
+        "site_id": "S003",
+        "site_name": "Riverfront Commercial Hub",
+        "location": "St. Louis, MO",
+        "site_manager": "Robert Vance"
+      },
+      "current_operator": {
+        "operator_id": "OP101",
+        "operator_name": "Marcus Vance",
+        "contact_number": "+1-555-0143",
+        "certified": true
+      },
+      "rental_history": [
+        {
+          "log_id": 7,
+          "equipment_id": "EQB1003",
+          "site_id": "S003",
+          "operator_id": "OP101",
+          "check_out_date": "2025-04-03",
+          "expected_return_date": "2025-04-18",
+          "check_in_date": null,
+          "condition_notes": null,
+          "status": "Active"
+        }
+      ],
+      "usage_history": [
+        {
+          "usage_id": 4,
+          "equipment_id": "EQB1003",
+          "log_date": "2025-04-15",
+          "engine_hours": 12.0,
+          "idle_hours": 148.0,
+          "fuel_used": 410.0,
+          "location": "St. Louis, MO - S003"
+        }
+      ]
+    },
+    {
+      "equipment_id": "EQC1004",
+      "type": "Crane",
+      "model": "Cat TL943 Rough Terrain Crane",
+      "status": "Overdue",
+      "current_site_id": "S004",
+      "rental_rate_per_day": 620.0,
+      "created_at": "2025-03-12T15:20:00Z",
+      "current_site": {
+        "site_id": "S004",
+        "site_name": "Granite Quarry Extension",
+        "location": "Springfield, IL",
+        "site_manager": "Elena Rostova"
+      },
+      "current_operator": {
+        "operator_id": "OP105",
+        "operator_name": "Carlos Gomez",
+        "contact_number": "+1-555-0177",
+        "certified": true
+      },
+      "rental_history": [
+        {
+          "log_id": 8,
+          "equipment_id": "EQC1004",
+          "site_id": "S004",
+          "operator_id": "OP105",
+          "check_out_date": "2025-03-01",
+          "expected_return_date": "2025-03-20",
+          "check_in_date": null,
+          "condition_notes": null,
+          "status": "Overdue"
+        }
+      ],
+      "usage_history": [
+        {
+          "usage_id": 5,
+          "equipment_id": "EQC1004",
+          "log_date": "2025-03-18",
+          "engine_hours": 88.0,
+          "idle_hours": 22.0,
+          "fuel_used": 750.0,
+          "location": "Springfield, IL - S004"
+        }
+      ]
+    },
+    {
+      "equipment_id": "EQX1007",
+      "type": "Excavator",
+      "model": "Cat 336 GC Excavator",
+      "status": "Checked Out",
+      "current_site_id": null,
+      "rental_rate_per_day": 460.0,
+      "created_at": "2025-03-15T09:10:00Z",
+      "current_site": null,
+      "current_operator": null,
+      "rental_history": [
+        {
+          "log_id": 9,
+          "equipment_id": "EQX1007",
+          "site_id": null,
+          "operator_id": null,
+          "check_out_date": "2025-04-12",
+          "expected_return_date": "2025-04-26",
+          "check_in_date": null,
+          "condition_notes": null,
+          "status": "Active"
+        }
+      ],
+      "usage_history": [
+        {
+          "usage_id": 6,
+          "equipment_id": "EQX1007",
+          "log_date": "2025-04-14",
+          "engine_hours": 5.0,
+          "idle_hours": 2.0,
+          "fuel_used": 45.0,
+          "location": "Unknown / Unassigned Site"
+        }
+      ]
+    },
+    {
+      "equipment_id": "EQG1003",
+      "type": "Grader",
+      "model": "Cat 12M3 Motor Grader",
+      "status": "Available",
+      "current_site_id": null,
+      "rental_rate_per_day": 395.0,
+      "created_at": "2025-03-18T14:00:00Z",
+      "current_site": null,
+      "current_operator": null,
+      "rental_history": [],
+      "usage_history": []
+    },
+    {
+      "equipment_id": "EQW1003",
+      "type": "Wheel Loader",
+      "model": "Cat 966M Wheel Loader",
+      "status": "Checked Out",
+      "current_site_id": "S005",
+      "rental_rate_per_day": 530.0,
+      "created_at": "2025-03-22T08:30:00Z",
+      "current_site": {
+        "site_id": "S005",
+        "site_name": "Logistics Park Construction",
+        "location": "Indianapolis, IN",
+        "site_manager": "David Chen"
+      },
+      "current_operator": {
+        "operator_id": "OP103",
+        "operator_name": "Brandon Lee",
+        "contact_number": "+1-555-0192",
+        "certified": true
+      },
+      "rental_history": [
+        {
+          "log_id": 10,
+          "equipment_id": "EQW1003",
+          "site_id": "S005",
+          "operator_id": "OP103",
+          "check_out_date": "2025-04-14",
+          "expected_return_date": "2025-04-28",
+          "check_in_date": null,
+          "condition_notes": null,
+          "status": "Active"
+        }
+      ],
+      "usage_history": []
+    },
+    {
+      "equipment_id": "EQX1008",
+      "type": "Excavator",
+      "model": "Cat 352 Heavy Demolition",
+      "status": "Maintenance",
+      "current_site_id": null,
+      "rental_rate_per_day": 720.0,
+      "created_at": "2025-03-25T16:45:00Z",
+      "current_site": null,
+      "current_operator": null,
+      "rental_history": [],
+      "usage_history": []
+    }
+  ],
+  "sites": [
+    { "site_id": "S001", "site_name": "Apex Mining Pit Alpha", "location": "Peoria, IL", "site_manager": "John Miller" },
+    { "site_id": "S002", "site_name": "Metro Highway Expansion", "location": "Chicago, IL", "site_manager": "Sarah Jenkins" },
+    { "site_id": "S003", "site_name": "Riverfront Commercial Hub", "location": "St. Louis, MO", "site_manager": "Robert Vance" },
+    { "site_id": "S004", "site_name": "Granite Quarry Extension", "location": "Springfield, IL", "site_manager": "Elena Rostova" },
+    { "site_id": "S005", "site_name": "Logistics Park Construction", "location": "Indianapolis, IN", "site_manager": "David Chen" }
+  ],
+  "operators": [
+    { "operator_id": "OP101", "operator_name": "Marcus Vance", "contact_number": "+1-555-0143", "certified": true },
+    { "operator_id": "OP102", "operator_name": "Alicia Thorne", "contact_number": "+1-555-0188", "certified": true },
+    { "operator_id": "OP103", "operator_name": "Brandon Lee", "contact_number": "+1-555-0192", "certified": true },
+    { "operator_id": "OP104", "operator_name": "Diana Ross", "contact_number": "+1-555-0129", "certified": true },
+    { "operator_id": "OP105", "operator_name": "Carlos Gomez", "contact_number": "+1-555-0177", "certified": true },
+    { "operator_id": "OP106", "operator_name": "Hannah Abbott", "contact_number": "+1-555-0155", "certified": false },
+    { "operator_id": "OP107", "operator_name": "Derek Shepherd", "contact_number": "+1-555-0164", "certified": true }
+  ],
+  "rental_logs": [
+    { "log_id": 1, "equipment_id": "EQX1001", "site_id": "S003", "operator_id": "OP101", "check_out_date": "2025-04-01", "expected_return_date": "2025-04-16", "check_in_date": null, "condition_notes": null, "status": "Active" },
+    { "log_id": 2, "equipment_id": "EQC1001", "site_id": "S001", "operator_id": "OP102", "check_out_date": "2025-04-02", "expected_return_date": "2025-04-20", "check_in_date": null, "condition_notes": null, "status": "Active" },
+    { "log_id": 3, "equipment_id": "EQB1001", "site_id": "S002", "operator_id": "OP103", "check_out_date": "2025-03-15", "expected_return_date": "2025-03-30", "check_in_date": "2025-03-29", "condition_notes": "Returned clean, minor tracks wear", "status": "Returned" },
+    { "log_id": 4, "equipment_id": "EQW1001", "site_id": "S004", "operator_id": "OP104", "check_out_date": "2025-04-05", "expected_return_date": "2025-04-25", "check_in_date": null, "condition_notes": null, "status": "Active" },
+    { "log_id": 5, "equipment_id": "EQC1002", "site_id": "S005", "operator_id": "OP105", "check_out_date": "2025-04-10", "expected_return_date": "2025-05-01", "check_in_date": null, "condition_notes": null, "status": "Active" },
+    { "log_id": 6, "equipment_id": "EQG1002", "site_id": "S002", "operator_id": "OP107", "check_out_date": "2025-04-08", "expected_return_date": "2025-04-22", "check_in_date": null, "condition_notes": null, "status": "Active" },
+    { "log_id": 7, "equipment_id": "EQB1003", "site_id": "S003", "operator_id": "OP101", "check_out_date": "2025-04-03", "expected_return_date": "2025-04-18", "check_in_date": null, "condition_notes": null, "status": "Active" },
+    { "log_id": 8, "equipment_id": "EQC1004", "site_id": "S004", "operator_id": "OP105", "check_out_date": "2025-03-01", "expected_return_date": "2025-03-20", "check_in_date": null, "condition_notes": null, "status": "Overdue" },
+    { "log_id": 9, "equipment_id": "EQX1007", "site_id": null, "operator_id": null, "check_out_date": "2025-04-12", "expected_return_date": "2025-04-26", "check_in_date": null, "condition_notes": null, "status": "Active" },
+    { "log_id": 10, "equipment_id": "EQW1003", "site_id": "S005", "operator_id": "OP103", "check_out_date": "2025-04-14", "expected_return_date": "2025-04-28", "check_in_date": null, "condition_notes": null, "status": "Active" }
+  ],
+  "usage_logs": [
+    { "usage_id": 1, "equipment_id": "EQX1001", "log_date": "2025-04-15", "engine_hours": 10.0, "idle_hours": 15.0, "fuel_used": 145.5, "location": "St. Louis, MO - S003" },
+    { "usage_id": 2, "equipment_id": "EQC1001", "log_date": "2025-04-15", "engine_hours": 32.5, "idle_hours": 4.0, "fuel_used": 280.0, "location": "Peoria, IL - S001" },
+    { "usage_id": 3, "equipment_id": "EQB1001", "log_date": "2025-03-28", "engine_hours": 64.0, "idle_hours": 12.0, "fuel_used": 520.0, "location": "Chicago, IL - S002" },
+    { "usage_id": 4, "equipment_id": "EQB1003", "log_date": "2025-04-15", "engine_hours": 12.0, "idle_hours": 148.0, "fuel_used": 410.0, "location": "St. Louis, MO - S003" },
+    { "usage_id": 5, "equipment_id": "EQC1004", "log_date": "2025-03-18", "engine_hours": 88.0, "idle_hours": 22.0, "fuel_used": 750.0, "location": "Springfield, IL - S004" },
+    { "usage_id": 6, "equipment_id": "EQX1007", "log_date": "2025-04-14", "engine_hours": 5.0, "idle_hours": 2.0, "fuel_used": 45.0, "location": "Unknown / Unassigned Site" },
+    { "usage_id": 7, "equipment_id": "EQW1001", "log_date": "2025-04-14", "engine_hours": 44.0, "idle_hours": 8.5, "fuel_used": 310.0, "location": "Springfield, IL - S004" }
+  ],
+  "intentional_anomalies": [
+    {
+      "anomaly_id": "ANO-001",
+      "type": "Missing Site & Operator Assignment",
+      "equipment_id": "EQX1007",
+      "target_table": "rental_logs",
+      "description": "Equipment EQX1007 is marked 'Checked Out' in equipment table, but current_site_id is NULL and rental_logs record has site_id = NULL and operator_id = NULL.",
+      "severity": "High",
+      "how_to_detect": "Query equipment where status = 'Checked Out' AND current_site_id IS NULL OR rental_logs.site_id IS NULL OR rental_logs.operator_id IS NULL."
+    },
+    {
+      "anomaly_id": "ANO-002",
+      "type": "Excessive Idle Hours Ratio",
+      "equipment_id": "EQB1003",
+      "target_table": "usage_logs",
+      "description": "Equipment EQB1003 logged 148 idle hours against only 12 engine hours (12.3x ratio, 92.5% idle time). Indicates engine left idling unnecessarily or fuel waste/theft.",
+      "severity": "Critical",
+      "how_to_detect": "Query usage_logs where (idle_hours / MAX(engine_hours, 1.0)) > 3.0 AND idle_hours > 20.0."
+    },
+    {
+      "anomaly_id": "ANO-003",
+      "type": "Overdue Unreturned Rental",
+      "equipment_id": "EQC1004",
+      "target_table": "rental_logs",
+      "description": "Equipment EQC1004 checked out on 2025-03-01 with expected return on 2025-03-20. Never checked in (>40 days overdue).",
+      "severity": "High",
+      "how_to_detect": "Query rental_logs where status = 'Overdue' OR (status = 'Active' AND expected_return_date < CURRENT_DATE)."
+    }
+  ]
+}
