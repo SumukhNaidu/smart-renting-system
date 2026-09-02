@@ -1,3 +1,4 @@
+import csv
 import os
 import random
 from datetime import datetime, timedelta
@@ -7,6 +8,111 @@ from app.models.equipment import Equipment
 from app.models.telemetry import Telemetry
 from app.models.alert import Alert
 from app.models.anomaly import Anomaly
+
+
+def import_synthetic_csv_dataset(csv_path: str, limit: int | None = None) -> int:
+    """Import the synthetic equipment dataset into the local SQLite tables.
+
+    This keeps the project working with the provided CSV while preserving unique equipment IDs
+    and updating existing records instead of dropping legitimate data.
+    """
+    if not os.path.exists(csv_path):
+        raise FileNotFoundError(f"CSV dataset not found: {csv_path}")
+
+    imported_count = 0
+    seen_ids = set()
+    with open(csv_path, newline="", encoding="utf-8") as csv_file:
+        reader = csv.DictReader(csv_file)
+        for idx, row in enumerate(reader):
+            equipment_id = str(row.get("Equipment ID", "")).strip()
+            if not equipment_id:
+                continue
+            if equipment_id in seen_ids:
+                continue
+            seen_ids.add(equipment_id)
+            if limit is not None and imported_count >= limit:
+                break
+
+            equipment_type = str(row.get("Type", "Excavator")).strip() or "Excavator"
+            site_id = str(row.get("Site ID", "")).strip() or None
+            operator_id = str(row.get("Last Operator ID", "")).strip() or None
+            status = "ACTIVE"
+
+            try:
+                checkout_date = datetime.strptime(row.get("Check-Out Date", ""), "%Y-%m-%d")
+                expected_checkin_date = datetime.strptime(row.get("Check-In Date", ""), "%Y-%m-%d")
+            except ValueError:
+                checkout_date = datetime.utcnow()
+                expected_checkin_date = datetime.utcnow() + timedelta(days=7)
+
+            try:
+                engine_hours_per_day = float(row.get("Engine Hours/Day", "0") or 0)
+                idle_hours_per_day = float(row.get("Idle Hours/Day", "0") or 0)
+                operating_days = int(row.get("Operating Days", "0") or 0)
+            except (TypeError, ValueError):
+                engine_hours_per_day = 0.0
+                idle_hours_per_day = 0.0
+                operating_days = 0
+
+            total_engine_hours = max(0.0, round(engine_hours_per_day * max(1, operating_days), 2))
+            total_idle_hours = max(0.0, round(idle_hours_per_day * max(1, operating_days), 2))
+            fuel_level = 80.0
+            lat = 40.6936 + (idx % 8) * 0.08
+            lon = -89.5890 + (idx % 6) * 0.09
+
+            db = SessionLocal()
+            try:
+                existing = db.query(Equipment).filter(Equipment.equipment_id == equipment_id).first()
+                if existing:
+                    existing.equipment_type = equipment_type
+                    existing.site_id = site_id
+                    existing.operator_id = operator_id
+                    existing.status = status
+                    existing.checkout_date = checkout_date
+                    existing.expected_checkin_date = expected_checkin_date
+                    existing.actual_checkin_date = None
+                    existing.engine_hours_per_day = engine_hours_per_day
+                    existing.idle_hours_per_day = idle_hours_per_day
+                    existing.total_engine_hours = total_engine_hours
+                    existing.total_idle_hours = total_idle_hours
+                    existing.operating_days = operating_days
+                    existing.fuel_level = fuel_level
+                    existing.latitude = lat
+                    existing.longitude = lon
+                    existing.updated_at = datetime.utcnow()
+                    db.commit()
+                    imported_count += 1
+                    continue
+
+                equipment = Equipment(
+                    equipment_id=equipment_id,
+                    qr_code=f"CAT-{equipment_id}",
+                    equipment_type=equipment_type,
+                    site_id=site_id,
+                    operator_id=operator_id,
+                    status=status,
+                    checkout_date=checkout_date,
+                    expected_checkin_date=expected_checkin_date,
+                    actual_checkin_date=None,
+                    engine_hours_per_day=engine_hours_per_day,
+                    idle_hours_per_day=idle_hours_per_day,
+                    total_engine_hours=total_engine_hours,
+                    total_idle_hours=total_idle_hours,
+                    operating_days=operating_days,
+                    fuel_level=fuel_level,
+                    latitude=lat,
+                    longitude=lon,
+                    last_telemetry_updated=datetime.utcnow(),
+                    created_at=datetime.utcnow(),
+                    updated_at=datetime.utcnow(),
+                )
+                db.add(equipment)
+                db.commit()
+                imported_count += 1
+            finally:
+                db.close()
+
+    return imported_count
 
 
 def seed_database(force_reset: bool = False):

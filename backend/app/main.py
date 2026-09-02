@@ -1,11 +1,12 @@
 import logging
+import os
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database import engine, Base
 from app.api.routers import equipment, telemetry, alerts, anomalies, billing, forecast
 from app.websocket_manager import ws_manager
-from seed_data import seed_database
+from seed_data import seed_database, import_synthetic_csv_dataset
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("smart_rental_backend")
@@ -15,6 +16,23 @@ Base.metadata.create_all(bind=engine)
 try:
     force_reset = str(__import__('os').getenv("FORCE_RESEED", "false")).lower() == "true"
     seed_database(force_reset=force_reset)
+
+    candidate_paths = [
+        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "synthetic_rental_data_1000.csv"),
+        os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "Downloads", "synthetic_rental_data_1000.csv"),
+        os.path.join(os.path.expanduser("~"), "Downloads", "synthetic_rental_data_1000.csv"),
+    ]
+
+    csv_path = next((path for path in candidate_paths if os.path.exists(path)), None)
+    if csv_path:
+        from app.database import SessionLocal
+        from app.models.equipment import Equipment
+        with SessionLocal() as session:
+            equipment_count = session.query(Equipment).count()
+        if equipment_count < 80:
+            imported = import_synthetic_csv_dataset(csv_path)
+            logger.info(f"Imported synthetic CSV rows into SQLite: {imported}")
+
 except Exception as e:
     logger.warning(f"Seed database execution notice: {e}")
 

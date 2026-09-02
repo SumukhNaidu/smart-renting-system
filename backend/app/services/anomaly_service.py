@@ -1,6 +1,9 @@
 import logging
 from datetime import datetime, timedelta
 from typing import List, Dict, Any
+
+import numpy as np
+from sklearn.ensemble import IsolationForest
 from sqlalchemy.orm import Session
 
 from app.models.equipment import Equipment
@@ -13,6 +16,26 @@ from app.websocket_manager import ws_manager
 logger = logging.getLogger("anomaly_service")
 
 class AnomalyService:
+
+    @staticmethod
+    def _equipment_feature_vector(eq: Equipment) -> List[float]:
+        util_pct = calculate_utilization(eq.total_engine_hours, eq.total_idle_hours)
+        if util_pct == 0.0 and (eq.engine_hours_per_day > 0 or eq.idle_hours_per_day > 0):
+            util_pct = calculate_utilization(eq.engine_hours_per_day, eq.idle_hours_per_day)
+
+        overdue_flag = 1.0 if (
+            eq.expected_checkin_date and eq.actual_checkin_date is None and datetime.utcnow() > eq.expected_checkin_date
+        ) else 0.0
+
+        return [
+            float(eq.engine_hours_per_day),
+            float(eq.idle_hours_per_day),
+            float(eq.total_engine_hours),
+            float(eq.total_idle_hours),
+            float(util_pct),
+            float(eq.fuel_level or 0.0),
+            overdue_flag,
+        ]
 
     @staticmethod
     def generate_ai_recommendation(anomaly_type: str, equipment: Equipment, details: Dict[str, Any]) -> str:
@@ -45,12 +68,88 @@ class AnomalyService:
                 f"Asset return date passed by {days} day(s). "
                 f"Recommendation: Apply standard overdue daily surcharge ($180/day) and issue rental extension notice."
             )
+        elif anomaly_type == "HYBRID_ISOLATION_FOREST":
+            return (
+                f"Asset {equipment.equipment_id} was flagged as statistically abnormal by the Isolation Forest model. "
+                f"Recommendation: Validate telemetry and dispatch a field inspection if the operating pattern is outside the normal fleet range."
+            )
         else:
             return f"Inspect asset {equipment.equipment_id} telemetry parameters for potential hardware or operating irregularities."
 
     @classmethod
+    def train_isolation_forest(cls, db: Session) -> Dict[str, Any]:
+        """Train an Isolation Forest on live fleet telemetry and persist any outlier anomalies."""
+        equipment_list = db.query(Equipment).all()
+        if not equipment_list:
+            return {
+                "status": "ok",
+                "samples_trained": 0,
+                "anomalies_detected": 0,
+                "message": "No equipment records available for model training.",
+            }
+
+        features = np.array([cls._equipment_feature_vector(eq) for eq in equipment_list], dtype=float)
+        model = IsolationForest(
+            contamination=settings.ISOLATION_FOREST_CONTAMINATION,
+            n_estimators=200,
+            random_state=42,
+        )
+        model.fit(features)
+        predictions = model.predict(features)
+        sample_scores = model.score_samples(features)
+
+        anomalies_detected = 0
+        for idx, eq in enumerate(equipment_list):
+            if predictions[idx] != -1:
+                continue
+
+            existing = db.query(Anomaly).filter(
+                Anomaly.equipment_id == eq.equipment_id,
+                Anomaly.anomaly_type == "HYBRID_ISOLATION_FOREST",
+                Anomaly.resolved == False,
+            ).first()
+            if existing:
+                continue
+
+            anomaly_score = float(sample_scores[idx])
+            desc = (
+                f"Isolation Forest identified {eq.equipment_id} as a telemetry outlier. "
+                f"Operating pattern deviates from normal fleet baseline."
+            )
+            rec = cls.generate_ai_recommendation("HYBRID_ISOLATION_FOREST", eq, {})
+
+            anomaly = Anomaly(
+                equipment_id=eq.equipment_id,
+                anomaly_type="HYBRID_ISOLATION_FOREST",
+                anomaly_score=round(anomaly_score, 4),
+                description=desc,
+                recommendation=rec,
+                detected_at=datetime.utcnow(),
+            )
+            db.add(anomaly)
+            anomalies_detected += 1
+
+            alert = Alert(
+                equipment_id=eq.equipment_id,
+                alert_type="ML_OUTLIER",
+                severity="HIGH",
+                message=desc,
+            )
+            db.add(alert)
+
+        db.commit()
+        return {
+            "status": "ok",
+            "samples_trained": len(equipment_list),
+            "anomalies_detected": anomalies_detected,
+            "message": "Isolation Forest trained on fleet telemetry and outlier anomalies generated.",
+        }
+
+    @classmethod
     def run_fleet_anomaly_detection(cls, db: Session) -> List[Anomaly]:
-        """Execute only the required operational anomaly checks for the fleet dashboard."""
+        """Execute operating anomaly checks and include the trained Isolation Forest findings."""
+        cls.train_isolation_forest(db)
+
         equipment_list = db.query(Equipment).all()
         now = datetime.utcnow()
         new_anomalies: List[Anomaly] = []
@@ -145,7 +244,6 @@ class AnomalyService:
 
         db.commit()
 
-        # Update equipment statuses to ANOMALY if active anomalies exist
         for eq in equipment_list:
             unresolved = db.query(Anomaly).filter(
                 Anomaly.equipment_id == eq.equipment_id,

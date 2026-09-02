@@ -360,7 +360,7 @@ export const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F5F7] text-gray-900 flex flex-col font-sans selection:bg-[#FFCD00] selection:text-black">
+    <div className="min-h-screen bg-[#F4F5F7] text-gray-900 flex flex-col font-sans selection:bg-[#FFCD00] selection:text-black overflow-x-hidden">
       <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="rounded-full bg-[#FFCD00] border border-black p-2">
@@ -455,7 +455,7 @@ export const App: React.FC = () => {
       )}
 
       {/* Main Container */}
-      <main className="flex-1 p-4 md:p-6 space-y-6 max-w-[1600px] w-full mx-auto">
+      <main className="flex-1 p-4 md:p-6 space-y-6 max-w-[1600px] w-full mx-auto min-h-0">
         {/* Top Control & Navigation Bar */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white p-3.5 rounded-xl border border-gray-200 shadow-sm">
           {/* Navigation Tabs */}

@@ -1,7 +1,11 @@
+import csv
+import os
+import tempfile
+
 import pytest
 from fastapi.testclient import TestClient
 from app.main import app
-from seed_data import seed_database
+from seed_data import seed_database, import_synthetic_csv_dataset
 
 client = TestClient(app)
 
@@ -26,6 +30,14 @@ def test_get_demand_forecast():
     assert "site_forecast" in data
     assert isinstance(data["site_forecast"], list)
     assert len(data["site_forecast"]) > 0
+
+
+def test_train_isolation_forest_model_endpoint():
+    response = client.post("/api/anomalies/train")
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert data["status"] == "ok"
+    assert data["samples_trained"] > 0
 
 
 def test_get_dashboard_summary():
@@ -59,6 +71,67 @@ def test_get_equipment_by_id():
 def test_get_equipment_by_id_not_found():
     response = client.get("/api/equipment/NON_EXISTENT_ID")
     assert response.status_code == 404
+
+
+def test_import_synthetic_csv_dataset_keeps_unique_ids_and_counts():
+    rows = [
+        {
+            "Equipment ID": "EQX1005",
+            "Type": "Bulldozer",
+            "Site ID": "S006",
+            "Check-Out Date": "2025-01-01",
+            "Check-In Date": "2025-01-31",
+            "Engine Hours/Day": "8",
+            "Idle Hours/Day": "0",
+            "Operating Days": "30",
+            "Last Operator ID": "OP301",
+        },
+        {
+            "Equipment ID": "EQX1005",
+            "Type": "Bulldozer",
+            "Site ID": "S012",
+            "Check-Out Date": "2025-01-11",
+            "Check-In Date": "2025-01-18",
+            "Engine Hours/Day": "2.0",
+            "Idle Hours/Day": "4.1",
+            "Operating Days": "7",
+            "Last Operator ID": "OP144",
+        },
+        {
+            "Equipment ID": "EQX2001",
+            "Type": "Excavator",
+            "Site ID": "S003",
+            "Check-Out Date": "2025-02-01",
+            "Check-In Date": "2025-02-14",
+            "Engine Hours/Day": "7.6",
+            "Idle Hours/Day": "1.1",
+            "Operating Days": "13",
+            "Last Operator ID": "OP201",
+        },
+    ]
+
+    with tempfile.NamedTemporaryFile(mode="w", newline="", suffix=".csv", delete=False) as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=[
+            "Equipment ID",
+            "Type",
+            "Site ID",
+            "Check-Out Date",
+            "Check-In Date",
+            "Engine Hours/Day",
+            "Idle Hours/Day",
+            "Operating Days",
+            "Last Operator ID",
+        ])
+        writer.writeheader()
+        writer.writerows(rows)
+        temp_path = csv_file.name
+
+    try:
+        count = import_synthetic_csv_dataset(temp_path)
+        assert count == 2
+        assert os.path.exists(temp_path)
+    finally:
+        os.unlink(temp_path)
 
 
 def test_checkin_checkout_via_id_and_qr_code():
